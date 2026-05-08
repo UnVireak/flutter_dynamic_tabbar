@@ -19,6 +19,7 @@ class HomeTabController extends GetxController {
 
   RxInt currentIndex = 0.obs;
   RxString selectedCategoryId = '1'.obs;
+  RxString status = '1'.obs;
 
   RxMap<String, List<PostModel>> postData = <String, List<PostModel>>{}.obs;
 
@@ -36,6 +37,27 @@ class HomeTabController extends GetxController {
 
   void switchSelectedCategory(String categoryId) {
     selectedCategoryId.value = categoryId;
+    syncStatusFromCategory(categoryId);
+  }
+
+  void setStatus(int code) {
+    status.value = code;
+  }
+
+  void syncStatusFromCategory(String categoryId) {
+    switch (categoryId) {
+      case '1':
+        status.value = 1; // checking
+        break;
+      case '2':
+        status.value = 2; // approved
+        break;
+      case '3':
+        status.value = -1; // rejected
+        break;
+      default:
+        status.value = 1;
+    }
   }
 
   Future<void> fetchPosts(String categoryId) async {

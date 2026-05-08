@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dynamic_tabbar/enums/refund_tracking_status_enum.dart';
+import 'package:flutter_dynamic_tabbar/extensions/refund_tracking_status_extension.dart';
 import 'package:get/get.dart';
 import '../controller/home_tab_controller.dart';
 import '../widget/reusable_widget.dart';
@@ -17,7 +18,6 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
   final PageController _pageController = PageController();
   final List<GlobalKey> _categoryKeys = [];
   final ScrollController _categoryScrollController = ScrollController();
-
 @override
 void initState() {
   super.initState();
@@ -25,7 +25,6 @@ void initState() {
   _categoryKeys.addAll(List.generate(controller.tabData.length, (_) => GlobalKey()),
   );
 }
-
   void switchToCategory(String categoryId) {
     final index = controller.tabData.indexWhere((cat) => cat.id == categoryId);
     if (index != -1) {
@@ -78,57 +77,105 @@ void initState() {
             //////////////////////////////////////////
             _buildOrderProcessSteps(),
             Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.red,
-                ),
-                child: Column(
-                  children: [
-
-                    Container(
-                      height: 100,
-                      width: 200,
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(100),
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Top Half',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-
-                    Expanded(
-                      child: Container(
-                        color: Colors.blue,
-                        child: Column(
-                          children: [
-
-                            const SizedBox(height: 12),
-
-                            const Text("Pending Shop Checking"),
-
-                            ERefundProgressSection(
-                              customerName: "Customer Requested",
-                              submittedDate: "06 May 2026",
-                              rejectedDate: "07 May 2026",
-                              shopName: "MDC Store",
-                              status: 1,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Column(
+                    children: [
+                      const SizedBox(height: 56),
+                      Expanded(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFE9E9E9),
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(32),
                             ),
-
-                            _buildOrderView(),
-
+                          ),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 40),
+                              Obx(() {
+                                final status = RefundTrackingStatusEnum.fromCode(
+                                  controller.status.value,
+                                );
+                                return Text(
+                                  status.titleStatus,
+                                  style: TextStyle(
+                                    color: status.badgeTextColor,
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                );
+                              }),
+                               const SizedBox(height: 20),
+                              Obx(() {
+                                return ERefundProgressSection(
+                                  customerName: "Customer Requested",
+                                  submittedDate: "06 May 2026",
+                                  rejectedDate: "07 May 2026",
+                                  shopName: "MDC Store",
+                                  status: controller.status.value,
+                                );
+                              }),
+                              SizedBox(height: 16,),
+                              _buildOrderView(),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Obx(() {
+                      final status = RefundTrackingStatusEnum.fromCode(
+                        controller.status.value,
+                      );
+                      return SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                width: 120,
+                                height: 60,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFFE9E9E9),
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(60),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Padding(
+                                padding: const EdgeInsets.all(28),
+                                child: Container(
+                                  width: 54,
+                                  height: 54,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: status.storeImage,
+                                      fit: BoxFit.cover,
+                                      colorFilter: ColorFilter.mode(
+                                        status.badgeTextColor,
+                                        BlendMode.srcIn,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
-                      ),
-                    ),
-
-                  ],
-                ),
+                      );
+                    }),
+                  ), 
+                ],
               ),
             )
           ],

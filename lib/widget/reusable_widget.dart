@@ -33,7 +33,7 @@ class ReusableTabScreen extends StatelessWidget {
         );
       }
       return ListView.separated(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.only(bottom: 16),
         itemCount: data.length,
         separatorBuilder: (_, __) =>
         const SizedBox(height: 12),
