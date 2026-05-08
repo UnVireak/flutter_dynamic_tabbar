@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dynamic_tabbar/enums/refund_tracking_status_enum.dart';
 import 'package:get/get.dart';
 import '../controller/home_tab_controller.dart';
 import '../widget/reusable_widget.dart';
+import '../widget/step_progress.dart';
 
 class HomeTabScreen extends StatefulWidget {
   const HomeTabScreen({super.key});
@@ -75,12 +77,60 @@ void initState() {
             //// Order Process Step List Section /////
             //////////////////////////////////////////
             _buildOrderProcessSteps(),
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                ),
+                child: Column(
+                  children: [
 
-            //////////////////////////////////////////
-            ///////// Order List Section /////////////
-            //////////////////////////////////////////
-            _buildOrderView(),
+                    Container(
+                      height: 100,
+                      width: 200,
+                      decoration: const BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(100),
+                        ),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Top Half',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
 
+                    Expanded(
+                      child: Container(
+                        color: Colors.blue,
+                        child: Column(
+                          children: [
+
+                            const SizedBox(height: 12),
+
+                            const Text("Pending Shop Checking"),
+
+                            ERefundProgressSection(
+                              customerName: "Customer Requested",
+                              submittedDate: "06 May 2026",
+                              rejectedDate: "07 May 2026",
+                              shopName: "MDC Store",
+                              status: 1,
+                            ),
+
+                            _buildOrderView(),
+
+                          ],
+                        ),
+                      ),
+                    ),
+
+                  ],
+                ),
+              ),
+            )
           ],
         ),
       ),
