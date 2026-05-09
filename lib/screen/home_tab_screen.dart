@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dynamic_tabbar/enums/refund_tracking_status_enum.dart';
-import 'package:flutter_dynamic_tabbar/extensions/refund_tracking_status_extension.dart';
 import 'package:get/get.dart';
+
 import '../controller/home_tab_controller.dart';
 import '../widget/reusable_widget.dart';
 import '../widget/step_progress.dart';
+import '../../enums/refund_tracking_status_enum.dart';
+import '../../extensions/refund_tracking_status_extension.dart';
 
 class HomeTabScreen extends StatefulWidget {
   const HomeTabScreen({super.key});
@@ -18,13 +19,13 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
   final PageController _pageController = PageController();
   final List<GlobalKey> _categoryKeys = [];
   final ScrollController _categoryScrollController = ScrollController();
-@override
-void initState() {
-  super.initState();
-  controller = Get.put(HomeTabController());
-  _categoryKeys.addAll(List.generate(controller.tabData.length, (_) => GlobalKey()),
-  );
-}
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(HomeTabController());
+    _categoryKeys.addAll(List.generate(controller.tabData.length, (_) => GlobalKey()),
+    );
+  }
   void switchToCategory(String categoryId) {
     final index = controller.tabData.indexWhere((cat) => cat.id == categoryId);
     if (index != -1) {
@@ -107,7 +108,7 @@ void initState() {
                                   ),
                                 );
                               }),
-                               const SizedBox(height: 20),
+                              const SizedBox(height: 20),
                               Obx(() {
                                 return ERefundProgressSection(
                                   customerName: "Customer Requested",
@@ -174,7 +175,7 @@ void initState() {
                         ),
                       );
                     }),
-                  ), 
+                  ),
                 ],
               ),
             )
@@ -183,57 +184,57 @@ void initState() {
       ),
     );
   }
-Widget _buildOrderProcessSteps(){
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 15),
-    child: SizedBox(
-      height: 40,
-      child: ListView.separated(
-        controller: _categoryScrollController,
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        scrollDirection: Axis.horizontal,
-        itemCount: controller.tabData.length,
-        itemBuilder: (context, index) => Obx((){
-          final category = controller.tabData[index];
-          final isSelected = category.id == controller.selectedCategoryId.value;
+  Widget _buildOrderProcessSteps(){
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      child: SizedBox(
+        height: 40,
+        child: ListView.separated(
+          controller: _categoryScrollController,
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          scrollDirection: Axis.horizontal,
+          itemCount: controller.tabData.length,
+          itemBuilder: (context, index) => Obx((){
+            final category = controller.tabData[index];
+            final isSelected = category.id == controller.selectedCategoryId.value;
 
-          return InkWell(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            key: _categoryKeys[index],
-            onTap: () {
-              _scrollCategoryToCenter(index);
-              controller.switchSelectedCategory(category.id);
-              switchToCategory(category.id);
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.blue : Colors.white,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Row(
-                spacing: 8,
-                children: [
-                  // Image.asset(category.icons.first, height: 18, color: isSelected ? EAppColor.white : EAppColor.themeBottomColor),
-                  Text(
-                    category.title,
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: isSelected ? Colors.white : Colors.blue,
-                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+            return InkWell(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              key: _categoryKeys[index],
+              onTap: () {
+                _scrollCategoryToCenter(index);
+                controller.switchSelectedCategory(category.id);
+                switchToCategory(category.id);
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.blue : Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Row(
+                  spacing: 8,
+                  children: [
+                    Image.asset(category.icons!.first  , height: 18, color: isSelected ? Colors.white : Colors.blue),
+                    Text(
+                      category.title,
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: isSelected ? Colors.white : Colors.blue,
+                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        }),
-        separatorBuilder: (_, __) => const SizedBox(width: 15),
+            );
+          }),
+          separatorBuilder: (_, __) => const SizedBox(width: 15),
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildOrderView() {
     return Expanded(

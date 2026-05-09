@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dynamic_tabbar/enums/refund_tracking_status_enum.dart';
-import 'package:flutter_dynamic_tabbar/extensions/refund_tracking_status_extension.dart';
+import '../../enums/refund_tracking_status_enum.dart';
+import '../../extensions/refund_tracking_status_extension.dart';
 
 class ERefundProgressSection extends StatelessWidget {
-  // final RefundTrackingStatusEnum status;
   final String customerName;
   final String submittedDate;
   final String rejectedDate;
@@ -21,9 +19,11 @@ class ERefundProgressSection extends StatelessWidget {
   });
 
   RefundTrackingStatusEnum get refundStatus => RefundTrackingStatusEnum.fromCode(status);
+
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 138,
       margin: EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -51,7 +51,7 @@ class ERefundProgressSection extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 4),
                 width: 2,
-                height: 35,
+                height: 38,
                 color: Colors.green,
               ),
               refundStatus == RefundTrackingStatusEnum.checking ?  Container(
@@ -59,9 +59,9 @@ class ERefundProgressSection extends StatelessWidget {
                 height: 28,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-           
                 ),
-                child: Image.network('https://cdn.iconscout.com/icon/free/png-256/free-instore-icon-svg-download-png-6982.png'),
+                child: ClipOval(
+                  child: Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEhhPFi5Fm0hKhK0y3K0uuPjqR9qaBV4I_-15-rdKIbw&s', fit: BoxFit.cover,)),
               ): Container(
                 width: 28,
                 height: 28,
@@ -75,61 +75,59 @@ class ERefundProgressSection extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(width: 12),
-
-          /// RIGHT CONTENT
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-                /// CUSTOMER NAME
-                Text(
-                  customerName,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
+                // CUSTOMER NAME
+                Flexible(
+                  child: Text(
+                    customerName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-
-                /// DATE
+               SizedBox(height: 4),
+                // DATE
                 Text(
                   submittedDate,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Colors.grey,
                   ),
                 ),
-
-                const SizedBox(height: 12),
-
-                /// DIVIDER
+                const SizedBox(height: 8),
+                // DIVIDER
                 Container(
                   height: 1,
                   color: Colors.grey.withValues(alpha: 0.2),
                 ),
-
                 const SizedBox(height: 12),
-
-                /// SHOP NAME
-                Text(
-                  shopName,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.blue[800],
-                    fontWeight: FontWeight.w600,
+                // SHOP NAME
+                Flexible(
+                  child: Text(
+                    shopName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-
-                const SizedBox(height: 6),
-
-                /// STATUS
-                refundStatus == RefundTrackingStatusEnum.checking
-                    ? Container(
+                const SizedBox(height: 4),
+                // STATUS
+                refundStatus == RefundTrackingStatusEnum.checking ? Container(
+                  height: 23,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: refundStatus.backgroundColor,
+                    color: Colors.blue.shade100,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
@@ -147,17 +145,14 @@ class ERefundProgressSection extends StatelessWidget {
                       ),
                     ),
                   ) : SizedBox.shrink(),
-
-                      const SizedBox(width: 4),
-
-                      Text(
-                        refundStatus.title,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: refundStatus.badgeTextColor,
-                          fontWeight: FontWeight.w500,
-                        ),
+                    const SizedBox(width: 4),
+                    Text('Checking',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: refundStatus.badgeTextColor,
+                        fontWeight: FontWeight.w500,
                       ),
+                    ),
                     ],
                   ),
                 ) : Text(
